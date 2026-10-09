@@ -1,0 +1,240 @@
+@font-face{font-family:"Bagel";src:url("../assets/fonts/bagel.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Figtree";src:url("../assets/fonts/figtree.woff2") format("woff2");font-weight:300 900;font-display:block}
+
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --pop:cubic-bezier(.22,1,.36,1);
+  --display:"Bagel","Arial Rounded MT Bold",sans-serif;
+  --body:"Figtree","Segoe UI",sans-serif;
+}
+
+html,body{margin:0;height:100%;overflow:hidden;background:#000;cursor:none}
+*{box-sizing:border-box}
+
+/* ---------- Escenario fijo 1920×1080, escalado al tamaño real de la pantalla ---------- */
+#stage{
+  position:absolute;left:50%;top:50%;width:1920px;height:1080px;
+  transform-origin:center;transform:translate(-50%,-50%);
+  overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:var(--body);font-weight:600;
+  -webkit-font-smoothing:antialiased;
+}
+#view,.scene{position:absolute;inset:0}
+
+/* ---------- Tonos: cada escena es un campo de color completo ---------- */
+#stage[data-tone="sun"]  {--bg:#FFC21A;--ink:#1C1306;--mute:#4B3908;--accent:#C8151F;--accent-ink:#fff;   --line:rgba(28,19,6,.32);  --bar:#1C1306;--bar-ink:#FFC21A;--bulb:#FFFBE6;--wire:#1C1306}
+#stage[data-tone="teal"] {--bg:#066F70;--ink:#FFF6E0;--mute:#CFEBE5;--accent:#FFC21A;--accent-ink:#1C1306;--line:rgba(255,246,224,.34);--bar:#033F40;--bar-ink:#FFF6E0;--bulb:#FFE9A8;--wire:#CFEBE5}
+#stage[data-tone="ember"]{--bg:#C21F28;--ink:#FFF4E2;--mute:#FFDCC8;--accent:#FFC21A;--accent-ink:#1C1306;--line:rgba(255,244,226,.38);--bar:#6E0C13;--bar-ink:#FFF4E2;--bulb:#FFE0A0;--wire:#FFDCC8}
+#stage[data-tone="coal"] {--bg:#17110D;--ink:#FFF1DC;--mute:#D9C3A5;--accent:#FFC21A;--accent-ink:#1C1306;--line:rgba(255,241,220,.3); --bar:#000;--bar-ink:#FFF1DC;--bulb:#FFD27A;--wire:#6B5A47}
+
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+h1{line-height:.94;letter-spacing:-.005em}
+em{font-style:normal;color:var(--accent)}
+
+/* ---------- Animaciones de entrada (arrancan cuando la cortina destapa) ---------- */
+[data-a]{animation-duration:1s;animation-timing-function:var(--ease);animation-fill-mode:both;animation-delay:calc(var(--d,0s) + .5s)}
+[data-a="rise"]{animation-name:rise}
+[data-a="pop"]{animation-name:pop;animation-timing-function:var(--pop);animation-duration:.8s}
+[data-a="wipe"]{animation-name:wipe;animation-duration:.9s}
+[data-a="slide"]{animation-name:slide}
+@keyframes rise{from{opacity:0;transform:translateY(64px)}}
+@keyframes pop{from{opacity:0;transform:scale(.35) rotate(-14deg)}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes slide{from{opacity:0;transform:translateX(140px)}}
+
+/* ---------- Luces de la terraza ---------- */
+.lights{position:absolute;left:0;top:0;width:1920px;height:112px;z-index:4;pointer-events:none}
+.lights svg{width:100%;height:100%;overflow:visible}
+.lights path{fill:none;stroke:var(--wire);stroke-width:2.5;opacity:.7}
+.bulb{fill:var(--bulb);filter:drop-shadow(0 0 9px var(--bulb));animation:twinkle 3.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.55}45%{opacity:1}70%{opacity:.8}}
+
+/* ---------- Marca ---------- */
+.brandmark{position:absolute;left:100px;top:90px;height:104px;display:flex;align-items:center;z-index:3}
+.brandmark img{height:104px;width:auto;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
+.brandmark .word{font:400 76px/1 var(--display);color:var(--ink)}
+.brandmark .word small,.brandmark .sub small{font-size:.62em;margin-right:2px}
+.brandmark .sub{margin-left:26px;padding-left:26px;border-left:4px solid var(--line);font:400 70px/1 var(--display);color:var(--ink)}
+.brandmark .sub b{font-weight:400;color:var(--accent)}
+.brandmark .word b{font-weight:400;color:var(--accent)}
+
+/* ---------- Foto tipo sticker (borde blanco, como la pegatina) ---------- */
+.photo{position:absolute;margin:0;border:14px solid #fff;border-radius:44px;overflow:hidden;background:#d9d2c4;
+  box-shadow:0 26px 40px -14px rgba(0,0,0,.5);transform:rotate(var(--r,0deg));
+  animation:photoIn 1.1s var(--ease) both;animation-delay:calc(var(--d,0s) + .55s)}
+.photo img,.photo video{width:100%;height:100%;object-fit:cover;display:block;animation:drift 24s linear both}
+@keyframes photoIn{from{opacity:0;transform:rotate(var(--r,0deg)) translateY(90px) scale(.9)}}
+@keyframes drift{from{transform:scale(1.15) translate(1.5%,1.2%)}to{transform:scale(1) translate(0,0)}}
+
+/* ---------- Barra inferior: navegación + teléfono ---------- */
+.bar{position:absolute;left:0;right:0;bottom:0;height:88px;z-index:5;background:var(--bar);color:var(--bar-ink);
+  display:flex;align-items:center;gap:4px;padding:0 100px}
+.pill{position:relative;height:54px;padding:0 16px;border:0;border-radius:27px;background:transparent;color:var(--bar-ink);
+  font:800 24px/54px var(--body);opacity:.58;cursor:pointer;white-space:nowrap}
+.pill.on{opacity:1;background:rgba(255,255,255,.13)}
+.pill i{position:absolute;left:16px;right:16px;bottom:7px;height:5px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden;display:none}
+.pill.on i{display:block}
+.pill i b{display:block;height:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);animation:fill var(--dur,15s) linear forwards}
+.paused .pill i b{animation-play-state:paused}
+@keyframes fill{to{transform:scaleX(1)}}
+.contact{margin-left:auto;display:flex;align-items:center;gap:14px;font:400 40px/1 var(--display);color:var(--accent);white-space:nowrap}
+.contact svg{width:34px;height:34px}
+.contact small{display:block;font:700 20px/1.1 var(--body);color:var(--bar-ink);opacity:.8;text-align:right;margin-bottom:4px}
+
+/* ---------- Cortina de transición ---------- */
+.curtain{position:absolute;inset:0;z-index:20;pointer-events:none}
+.curtain b{position:absolute;top:0;bottom:0;left:-20%;width:140%;transform:translateX(-120%) skewX(-14deg)}
+
+/* =========================================================
+   ESCENAS
+   ========================================================= */
+.txt{position:absolute;left:100px;top:216px}
+.lead{font-size:38px;line-height:1.25;color:var(--mute);margin:16px 0 0;font-weight:600;max-width:980px}
+
+/* ---- Club de Jugos ---- */
+.s-club .txt{width:1120px}
+.s-club h1{font-size:128px}
+.stickergrid{display:grid;grid-template-columns:repeat(5,128px);gap:24px;margin-top:36px}
+.slot{position:relative;width:128px;height:128px;border-radius:50%;border:4px dashed var(--line)}
+.st{position:absolute;inset:-8px;border-radius:50%;background:#fff;padding:9px;color:var(--c);
+  box-shadow:0 10px 16px -8px rgba(0,0,0,.5);
+  animation:stamp .75s var(--pop) both;animation-delay:calc(1.1s + var(--i)*.42s)}
+.st svg{width:100%;height:100%;display:block}
+.st .n{position:absolute;right:-8px;bottom:-8px;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--bg);
+  display:grid;place-items:center;font:800 24px/1 var(--body)}
+.slot:last-child .st{animation:stamp .75s var(--pop) both,glow 1.2s ease-in-out 5.4s 3;animation-delay:calc(1.1s + var(--i)*.42s),5.4s}
+@keyframes stamp{0%{opacity:0;transform:scale(2.8) rotate(-34deg)}55%{opacity:1;transform:scale(.9) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(var(--rot,0deg))}}
+@keyframes glow{50%{box-shadow:0 0 0 14px var(--accent),0 10px 16px -8px rgba(0,0,0,.5)}}
+.win{font:400 56px/1.05 var(--display);margin:34px 0 0;width:1100px;
+  animation:pop .9s var(--pop) both;animation-delay:5.3s}
+.s-club .photo{right:100px;top:130px;width:600px;height:810px;--r:2.5deg}
+
+/* ---- Premios al instante ---- */
+.s-premios .txt{width:640px}
+.s-premios h1{font-size:96px}
+.s-premios .lead{font-size:36px}
+.medals{position:absolute;left:760px;top:250px;display:flex;gap:20px}
+.medal{width:340px;text-align:center}
+.medal:nth-child(2){margin-top:110px}
+.disc{width:340px;height:340px;perspective:1300px}
+.disc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  animation:flip 1.2s var(--ease) both;animation-delay:calc(var(--d) + 1.3s)}
+.disc-in::before{content:"";position:absolute;inset:0}
+.face{position:absolute;inset:0;border-radius:50%;border:14px solid #fff;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  box-shadow:0 26px 36px -14px rgba(0,0,0,.55)}
+.face.front{display:grid;place-items:center;font:400 210px/1 var(--display);color:var(--ink);padding-top:14px;
+  background:radial-gradient(circle at 34% 28%,#FFE680 0%,#FFC21A 55%,#E39A00 100%);animation:wob 1.1s ease-in-out calc(var(--d) + .6s) 1}
+.face.back{transform:rotateY(180deg)}
+.face img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes flip{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
+@keyframes wob{25%{transform:rotate(-8deg)}50%{transform:rotate(7deg)}75%{transform:rotate(-4deg)}}
+.medal h3{font-size:46px;line-height:1;margin-top:26px}
+.medal p{margin:10px 0 0;font-size:28px;color:var(--mute)}
+
+/* ---- Cuenta regresiva (abrimos / cocina) ---- */
+.s-count .txt{width:900px}
+.s-count h1{font-size:122px}
+.s-count h1 .big{display:block;font-size:200px;color:var(--accent);margin-top:6px}
+.cd{display:flex;gap:34px;margin-top:44px}
+.cu{text-align:center}
+.cu b{display:block;min-width:200px;font:400 150px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--ink)}
+.cu i{display:block;font:800 28px/1 var(--body);font-style:normal;color:var(--mute);margin-top:6px;text-transform:lowercase}
+.reel{position:absolute;right:-70px;top:-160px;width:960px;height:1400px;display:flex;gap:24px;transform:rotate(7deg)}
+.reel .col{width:290px;overflow:hidden}
+.reel .col-in{animation:reel var(--t,60s) linear infinite}
+.reel .col:nth-child(2) .col-in{animation-direction:reverse}
+.reel .col:nth-child(2){margin-top:-200px}
+.reel .it{margin-bottom:24px;height:387px;border:10px solid #fff;border-radius:34px;overflow:hidden;box-shadow:0 18px 28px -12px rgba(0,0,0,.5)}
+.reel .it img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes reel{to{transform:translateY(-50%)}}
+
+/* ---- Listas de precios ---- */
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:28px;padding:14px 0;border-bottom:3px dotted var(--line)}
+.row:last-child{border-bottom:0}
+.row h3{font-size:50px;line-height:1.02}
+.row p{margin:6px 0 0;font-size:27px;line-height:1.2;color:var(--mute)}
+.row .p{font:400 58px/1 var(--display);color:var(--accent)}
+
+/* ---- Jugos y limonadas ---- */
+.s-jugos .photo{left:100px;top:226px;width:440px;height:720px;--r:-2.2deg}
+.panel{position:absolute;top:216px}
+.panel h2{font-size:84px;line-height:.95;min-height:160px}
+.price{font:400 108px/1 var(--display);color:var(--accent);margin:8px 0 22px}
+.price small{display:block;font:800 30px/1.1 var(--body);color:var(--mute);margin-top:8px}
+.flavors{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;font:800 40px/1.1 var(--body)}
+.flavors.one{grid-template-columns:1fr}
+.flavors li{display:flex;align-items:center;gap:14px}
+.dot{flex:none;width:26px;height:26px;border-radius:50%;background:var(--c);border:3px solid var(--ink)}
+.ribbon{position:absolute;left:620px;right:100px;bottom:128px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:30px;
+  padding:20px 36px;border-radius:26px;background:var(--accent);color:var(--accent-ink);transform:rotate(-1.4deg);
+  box-shadow:0 18px 26px -12px rgba(0,0,0,.45)}
+.ribbon h3{font-size:62px}
+.ribbon p{margin:0;font-size:29px;line-height:1.2;font-weight:700}
+.ribbon .p{font:400 62px/1 var(--display)}
+
+/* ---- Micheladas y cócteles ---- */
+.s-cocteles .p1{left:100px;top:230px;width:430px;height:560px;--r:-4deg}
+.s-cocteles .p2{left:370px;top:480px;width:430px;height:500px;--r:3.5deg;--d:.2s}
+.grp{position:absolute;left:880px;width:940px}
+.grp.a{top:216px}
+.grp.b{top:505px}
+.grp .head{display:flex;align-items:baseline;justify-content:space-between;gap:30px}
+.grp h2{font-size:78px}
+.grp .head .p{font:400 78px/1 var(--display);color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+.chips span{padding:10px 26px 12px;border:4px solid var(--ink);border-radius:40px;font:800 36px/1.1 var(--body)}
+.grp.b .row{padding:10px 0}
+.grp.b .row h3{font-size:54px}
+
+/* ---- Asados ---- */
+.s-asados .list{position:absolute;left:700px;top:176px;width:1120px}
+.s-asados h1{font-size:112px;margin-bottom:8px}
+.s-asados .row{padding:13px 0}
+.s-asados .row h3{font-size:56px}
+.s-asados .row p{font-size:28px;margin-top:5px}
+.s-asados .row .p{font-size:64px}
+.s-asados .photo.a1{left:100px;top:196px;width:456px;height:790px;--r:-2deg;z-index:2}
+.s-asados .photo.a2{left:420px;top:690px;width:240px;height:290px;--r:4deg;z-index:3}
+.s-asados .photo video{animation:none}
+
+/* ---- Barril ---- */
+.backdrop{position:absolute;left:0;right:0;top:130px;bottom:90px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-around}
+.backdrop div{white-space:nowrap;font:400 300px/1 var(--display);color:transparent;-webkit-text-stroke:3px var(--line);animation:marq 50s linear infinite}
+.backdrop div:nth-child(2){animation-direction:reverse;animation-duration:64s}
+@keyframes marq{to{transform:translateX(-50%)}}
+.s-barril .txt{top:214px}
+.s-barril h1{font-size:210px}
+.s-barril ul{list-style:none;margin:36px 0 0;padding:0}
+.s-barril li{font:400 110px/1.08 var(--display);display:block;position:relative;width:max-content;max-width:100%}
+.s-barril li::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:12px;background:var(--accent);z-index:-1;
+  animation:wipe .9s var(--ease) both;animation-delay:calc(var(--d) + .5s)}
+.s-barril .note{font-size:38px;line-height:1.25;color:var(--ink);max-width:1000px;margin:34px 0 0;font-weight:700}
+
+/* ---- Video ---- */
+.s-video .txt{width:860px;top:300px}
+.s-video h1{font-size:118px}
+.s-video .big{font:400 64px/1 var(--display);color:var(--accent);margin-top:34px}
+.s-video .photo{--r:1.6deg}
+.s-video.portrait .photo{right:140px;top:128px;width:520px;height:866px}
+.s-video.landscape .photo{left:210px;top:140px;width:1500px;height:846px;--r:-.8deg}
+.s-video.landscape .txt{display:none}
+.s-video .photo video{animation:none}
+
+/* ---- Cocina (cuenta regresiva de asados) ---- */
+.cocina-photo{left:1000px;top:150px;width:820px;height:830px;--r:2deg}
+.s-count .cu b{min-width:180px}
+
+.brandmark .sub.img{padding-left:26px;border-left:4px solid var(--line)}
+.brandmark .sub.img img{height:104px}
+
+
+.s-barril .photo{right:340px;top:176px;width:456px;height:804px;--r:2.2deg;z-index:2}
+.s-barril .photo video{object-fit:cover}
+.s-barril .txt{width:1150px}
+.s-barril .note{max-width:900px}
+
+/* Insignia "Desde las ..." arriba a la derecha */
+.when{position:absolute;right:100px;top:104px;z-index:6;padding:12px 30px 14px;border-radius:40px;background:var(--accent);color:var(--accent-ink);
+  font:400 44px/1 var(--display);transform:rotate(-2deg);box-shadow:0 14px 20px -10px rgba(0,0,0,.5)}
