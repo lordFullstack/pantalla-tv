@@ -312,12 +312,35 @@
     document.getElementById("lights").appendChild(svg);
   })();
 
-  /* ---------- escala al tamaño real de la pantalla ---------- */
+  /* ---------- escala al tamaño real de la pantalla ----------
+     Los navegadores de algunas TV informan mal el tamaño al abrir la página, así que se
+     toma el menor valor reportado y se recalcula todo el tiempo.
+     Ajuste manual: tecla + / - del control, o agregar ?z=0.8 al enlace (se recuerda). */
+  var userZ = 1;
+  try {
+    if (q.get("z")) localStorage.setItem("pt_z", q.get("z"));
+    userZ = parseFloat(localStorage.getItem("pt_z")) || 1;
+  } catch (e) { if (q.get("z")) userZ = parseFloat(q.get("z")) || 1; }
+  function size(vals) {
+    var ok = vals.filter(function (v) { return v && v > 0 && isFinite(v); });
+    return ok.length ? Math.min.apply(null, ok) : 0;
+  }
   function fit() {
-    var k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    var d = document.documentElement, vv = window.visualViewport || {};
+    var w = size([innerWidth, d.clientWidth, vv.width]), h = size([innerHeight, d.clientHeight, vv.height]);
+    if (!w || !h) return;
+    var k = Math.min(w / 1920, h / 1080) * userZ;
     stage.style.transform = "translate(-50%,-50%) scale(" + k + ")";
   }
-  addEventListener("resize", fit); fit();
+  ["resize", "orientationchange", "load", "fullscreenchange"].forEach(function (ev) { addEventListener(ev, fit); });
+  if (window.visualViewport) visualViewport.addEventListener("resize", fit);
+  setInterval(fit, 1000);
+  fit();
+  function zoomBy(dz) {
+    userZ = Math.max(.3, Math.min(2, Math.round((userZ + dz) * 100) / 100));
+    try { localStorage.setItem("pt_z", userZ); } catch (e) {}
+    fit();
+  }
 
   /* ---------- barra inferior ---------- */
   function renderBar(list, pos, dur) {
@@ -401,6 +424,9 @@
       paused = !paused; stage.classList.toggle("paused", paused);
       if (paused) { clearTimeout(timer); timer = null; } else step(1);
     } else if (/^[1-9]$/.test(e.key) && list[+e.key - 1]) jump(+e.key - 1);
+    else if (e.key === "+" || e.key === "=") zoomBy(.05);
+    else if (e.key === "-" || e.key === "_") zoomBy(-.05);
+    else if (e.key === "0") { userZ = 1; try { localStorage.removeItem("pt_z"); } catch (er) {} fit(); }
     else if (e.key === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
   });
 
