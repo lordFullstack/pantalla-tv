@@ -66,6 +66,20 @@
     if (now_ >= toMin(at) && now_ < toMin(S.close)) return "";
     return '<div class="when" data-a="pop" style="--d:.9s">Desde las ' + fmt12(at) + "</div>";
   }
+  /* Si el navegador bloquea la reproducción automática, se muestra un ▶ sobre el video;
+     cualquier toque o tecla del control remoto (OK) lo arranca. */
+  function markBlocked(v, e) {
+    if (e && e.name !== "NotAllowedError") return;
+    if (v.parentNode && v.parentNode.classList) v.parentNode.classList.add("blocked");
+  }
+  document.addEventListener("playing", function (e) {
+    var f = e.target.parentNode; if (f && f.classList) f.classList.remove("blocked");
+  }, true);
+  ["pointerdown", "keydown"].forEach(function (ev) {
+    addEventListener(ev, function () {
+      [].forEach.call(document.querySelectorAll("video"), function (v) { if (v.paused) v.play().catch(function () {}); });
+    });
+  });
   var sectionPick = {};
   function videoSticker(key, cls, fallbackImg, d) {
     var fb = fallbackImg
@@ -86,7 +100,7 @@
         else fig.remove();
       });
       var tries = 0;
-      (function go() { var p = v.play(); if (p && p.catch) p.catch(function () { if (tries++ < 20 && !v._stop) setTimeout(go, 500); }); })();
+      (function go() { var p = v.play(); if (p && p.catch) p.catch(function (e) { markBlocked(v, e); if (tries++ < 20 && !v._stop) setTimeout(go, 500); }); })();
       /* si el navegador lo pausa solo, se reanuda mientras la escena siga en pantalla */
       v.addEventListener("pause", function () { if (!v._stop) setTimeout(function () { if (!v._stop) v.play().catch(function () {}); }, 300); });
     });
@@ -260,6 +274,7 @@
       function start() {
         var p = vid.play();
         if (p && p.catch) p.catch(function () {
+          markBlocked(vid, arguments[0]);
           if (tries++ < 20) retry = setTimeout(start, 500);
         });
       }

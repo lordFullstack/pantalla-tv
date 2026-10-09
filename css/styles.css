@@ -238,3 +238,10 @@ em{font-style:normal;color:var(--accent)}
 /* Insignia "Desde las ..." arriba a la derecha */
 .when{position:absolute;right:100px;top:104px;z-index:6;padding:12px 30px 14px;border-radius:40px;background:var(--accent);color:var(--accent-ink);
   font:400 44px/1 var(--display);transform:rotate(-2deg);box-shadow:0 14px 20px -10px rgba(0,0,0,.5)}
+
+/* ▶ cuando el navegador bloquea el video automático */
+.photo.blocked::after{content:"";position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;
+  background:var(--accent);box-shadow:0 14px 24px -8px rgba(0,0,0,.55);
+  clip-path:none;animation:pop .6s var(--pop) both}
+.photo.blocked::before{content:"";position:absolute;left:50%;top:50%;z-index:2;margin:-30px 0 0 -18px;width:0;height:0;
+  border-left:56px solid var(--accent-ink);border-top:34px solid transparent;border-bottom:34px solid transparent}
