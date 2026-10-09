@@ -26,3 +26,6 @@ Todo está en `js/data.js`: precios, sabores, horarios, fotos, videos y el orden
 ## Probar sin esperar la hora
 `index.html?t=19:00` simula las 7 pm. `?scene=asados` muestra una escena. `?mode=noche|tarde|promo|cerrado` fuerza un momento.
 Teclas: ← → cambian de escena, espacio pausa, 1-9 saltan, F pantalla completa.
+
+## Escena gancho del Club
+La escena `gancho` muestra en grande «¡Ganate un jugo gratis!» y los premios instantáneos. Los textos se editan en `club.hook` de `js/data.js`.

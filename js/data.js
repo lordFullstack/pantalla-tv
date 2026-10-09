@@ -53,10 +53,10 @@ window.PT = {
 
   /* Qué se muestra en cada momento del día (en este orden, en bucle). */
   playlists: {
-    promo:   ["abrimos", "club", "jugos", "premios", "cocina", "asados", "video", "cocteles", "barril"],
-    tarde:   ["club", "jugos", "cocteles", "premios", "video", "cocina"],
-    noche:   ["asados", "barril", "jugos", "cocteles", "club", "video", "premios"],
-    cerrado: ["abrimos", "club", "premios", "video"]
+    promo:   ["gancho", "abrimos", "club", "jugos", "cocina", "asados", "video", "cocteles", "barril"],
+    tarde:   ["gancho", "club", "jugos", "cocteles", "video", "cocina"],
+    noche:   ["asados", "barril", "jugos", "cocteles", "gancho", "club", "video"],
+    cerrado: ["gancho", "abrimos", "club", "video"]
   },
 
   /* Sabores: color del punto junto al nombre. */
@@ -114,6 +114,14 @@ window.PT = {
   },
 
   club: {
+    /* Escena "gancho": el titular grande del Club. Edita los textos aquí. */
+    hook: {
+      title: "¡Ganate un jugo gratis!",
+      sub: "con el Club del Jugo de Pa'COMER",
+      prizesTitle: "Participa por premios instantáneos",
+      note: "Junta 10 stickers y tu jugo va por la casa",
+      tag: "¡Instantáneo!"
+    },
     goal: 10,
     prizes: [
       { name: "Jugo gratis", img: "jugo1" },

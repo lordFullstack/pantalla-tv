@@ -141,6 +141,35 @@
     }
   };
 
+  /* Gancho del Club: titular gigante + premios instantáneos en grande */
+  SCENES.gancho = {
+    label: "Club", dur: 16, tone: ["ember", "coal"],
+    html: function () {
+      var H = PT.club.hook, drops = "";
+      for (var i = 0; i < 12; i++) {
+        drops += '<div class="drop" style="--x:' + (i * 8.6 + (i % 3) * 2) + "%;--s:" + (88 + (i * 37) % 60) + "px;--t:" + (11 + (i * 5) % 7) +
+          "s;--d:-" + ((i * 3.1) % 11).toFixed(1) + "s;--c:" + STICKER_COLORS[i % 10] + '"><svg viewBox="0 0 100 100"><use href="#slice"/></svg></div>';
+      }
+      var words = H.title.split(" ").map(function (w, i) {
+        return '<span class="w' + (/gratis/i.test(w) ? " hot" : "") + '" style="--i:' + i + '">' + w + "</span>";
+      }).join(" ");
+      var pw = H.prizesTitle.split(" "), last = pw.pop();
+      var medals = PT.club.prizes.map(function (p, i) {
+        var d = i * 0.45;
+        return '<div class="medal" style="--d:' + d + 's"><div class="disc"><div class="disc-in" style="--d:' + d + 's">' +
+          '<div class="face front" style="--d:' + d + 's">?</div>' +
+          '<div class="face back"><img src="' + PT.img[p.img] + '" alt=""></div></div></div>' +
+          "<h3>" + p.name + '</h3><span class="tag" style="--d:' + (2.2 + d) + 's">' + H.tag + "</span></div>";
+      }).join("");
+      return drops + brand("tomar") +
+        '<h1 class="hook">' + words + "</h1>" +
+        '<p class="hook-sub" data-a="rise" style="--d:1.1s">' + H.sub + "</p>" +
+        '<div class="g-left"><h2 data-a="rise" style="--d:1.5s">' + pw.join(" ") + " <em>" + last + "</em></h2>" +
+        '<p data-a="rise" style="--d:1.9s">' + H.note + "</p></div>" +
+        '<div class="g-medals">' + medals + "</div>";
+    }
+  };
+
   SCENES.premios = {
     label: "Premios", dur: 15, tone: ["ember", "coal"],
     html: function () {

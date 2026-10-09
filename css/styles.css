@@ -245,3 +245,33 @@ em{font-style:normal;color:var(--accent)}
   clip-path:none;animation:pop .6s var(--pop) both}
 .photo.blocked::before{content:"";position:absolute;left:50%;top:50%;z-index:2;margin:-30px 0 0 -18px;width:0;height:0;
   border-left:56px solid var(--accent-ink);border-top:34px solid transparent;border-bottom:34px solid transparent}
+
+/* ---- Gancho del Club ---- */
+.drop{position:absolute;top:-170px;left:var(--x);width:var(--s);height:var(--s);color:var(--c);opacity:.3;
+  animation:fall var(--t) linear var(--d) infinite;pointer-events:none}
+.drop svg{width:100%;height:100%;display:block}
+@keyframes fall{from{transform:translateY(0) rotate(0)}to{transform:translateY(1400px) rotate(300deg)}}
+.hook{position:absolute;left:100px;top:198px;width:1740px;margin:0;font-size:160px;line-height:1;white-space:nowrap;z-index:2}
+.hook .w{display:inline-block;animation:slam .7s var(--pop) both;animation-delay:calc(.55s + var(--i)*.2s)}
+@keyframes slam{0%{opacity:0;transform:scale(2.6) rotate(-9deg)}60%{opacity:1;transform:scale(.94) rotate(1.5deg)}100%{opacity:1;transform:none}}
+.hook .hot{position:relative;color:var(--accent);animation:slam .7s var(--pop) both,beat 1.6s ease-in-out 2.4s infinite;
+  animation-delay:calc(.55s + var(--i)*.2s),2.4s}
+.hook .hot::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:14px;border-radius:8px;background:var(--accent);
+  animation:wipe .8s var(--ease) 1.5s both}
+@keyframes beat{50%{transform:scale(1.07) rotate(-1.5deg)}}
+.hook-sub{position:absolute;left:100px;top:376px;margin:0;font:400 64px/1.05 var(--display);color:var(--ink);z-index:2}
+.g-left{position:absolute;left:100px;top:496px;width:600px;z-index:2}
+.g-left h2{font-size:70px;line-height:.98;margin:0}
+.g-left p{margin:30px 0 0;font-size:38px;line-height:1.2;font-weight:700;color:var(--mute);max-width:520px}
+.g-medals{position:absolute;left:770px;top:462px;display:flex;gap:40px;z-index:2}
+.g-medals .medal{width:300px;animation:bob 3.2s ease-in-out calc(var(--d) + 3s) infinite}
+.g-medals .medal:nth-child(2){margin-top:46px}
+.g-medals .disc{position:relative;width:300px;height:300px}
+.g-medals .disc::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:7px solid var(--accent);
+  animation:ring 1.9s ease-out calc(var(--d) + 3s) infinite backwards}
+.g-medals .face.front{font-size:190px}
+.g-medals .medal h3{font-size:42px;margin:20px -34px 0;line-height:1.02}
+.g-medals .tag{display:inline-block;margin-top:14px;padding:6px 20px 8px;border-radius:30px;background:var(--accent);color:var(--accent-ink);
+  font:400 28px/1 var(--display);transform:rotate(-2deg);animation:pop .7s var(--pop) both;animation-delay:var(--d)}
+@keyframes bob{50%{transform:translateY(-12px)}}
+@keyframes ring{from{opacity:.95;transform:scale(1)}to{opacity:0;transform:scale(1.28)}}
