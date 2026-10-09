@@ -208,8 +208,6 @@ em{font-style:normal;color:var(--accent)}
 .s-barril h1{font-size:210px}
 .s-barril ul{list-style:none;margin:36px 0 0;padding:0}
 .s-barril li{font:400 110px/1.08 var(--display);display:block;position:relative;width:max-content;max-width:100%}
-.s-barril li::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:12px;background:var(--accent);z-index:-1;
-  animation:wipe .9s var(--ease) both;animation-delay:calc(var(--d) + .5s)}
 .s-barril .note{font-size:38px;line-height:1.25;color:var(--ink);max-width:1000px;margin:34px 0 0;font-weight:700}
 
 /* ---- Video ---- */
@@ -256,8 +254,6 @@ em{font-style:normal;color:var(--accent)}
 @keyframes slam{0%{opacity:0;transform:scale(2.6) rotate(-9deg)}60%{opacity:1;transform:scale(.94) rotate(1.5deg)}100%{opacity:1;transform:none}}
 .hook .hot{position:relative;color:var(--accent);animation:slam .7s var(--pop) both,beat 1.6s ease-in-out 2.4s infinite;
   animation-delay:calc(.55s + var(--i)*.2s),2.4s}
-.hook .hot::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:14px;border-radius:8px;background:var(--accent);
-  animation:wipe .8s var(--ease) 1.5s both}
 @keyframes beat{50%{transform:scale(1.07) rotate(-1.5deg)}}
 .hook-sub{position:absolute;left:100px;top:376px;margin:0;font:400 64px/1.05 var(--display);color:var(--ink);z-index:2}
 .g-left{position:absolute;left:100px;top:496px;width:600px;z-index:2}

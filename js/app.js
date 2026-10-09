@@ -143,7 +143,7 @@
 
   /* Gancho del Club: titular gigante + premios instantáneos en grande */
   SCENES.gancho = {
-    label: "Club", dur: 16, tone: ["ember", "coal"],
+    label: "Gratis", dur: 16, tone: ["ember", "coal"],
     html: function () {
       var H = PT.club.hook, drops = "";
       for (var i = 0; i < 12; i++) {
