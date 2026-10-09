@@ -459,6 +459,22 @@
     else if (e.key === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
   });
 
+  /* Actualización automática: cada 5 minutos pregunta al servidor si hay versión nueva
+     (el número ?v= de index.html) y, si cambió, se recarga sola. Así los cambios llegan
+     a la TV sin tocarla. */
+  var curVer = ((document.currentScript && document.currentScript.src || "").match(/[?&]v=(\d+)/) || [])[1];
+  function checkUpdate() {
+    if (!curVer || !window.fetch || location.protocol === "file:") return;
+    fetch(location.pathname + "?_=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var m = t.match(/app\.js\?v=(\d+)/);
+        if (m && m[1] !== curVer) location.reload();
+      })
+      .catch(function () {});
+  }
+  setInterval(checkUpdate, 5 * 60 * 1000);
+
   /* Recarga diaria antes de abrir, para que la pantalla nunca se degrade */
   setInterval(function () {
     var n = now(); if (n.getHours() === 5 && n.getMinutes() === 30 && n.getSeconds() < 30 && !q.get("t")) location.reload();
